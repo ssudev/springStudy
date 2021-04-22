@@ -1,9 +1,7 @@
 package ex1;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -22,12 +20,18 @@ public class JpaMain {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
         try{
-            // JPA에서는 트랜잭션이 매우 중요하다.
-            Member member = em.find(Member.class, 1L);
 
-            // JPA를 통해 데이터를 가져오면 COMMIT하는 시점에 데이터를 다 확인해서 업데이트를 다 치고 COMMIT한다.
-            member.setName("helloJPA");
-            
+            // 비영속
+            Member member1 = new Member(150L, "A");
+            Member member2 = new Member(160L, "B");
+
+            // 영속 (이때는 DB에 저장되는 상태가 아님)
+            em.persist(member1);
+            em.persist(member2);
+            System.out.println("===================");
+            // 영속성 컨텍스트에서 분리, 준영속 상태
+            //em.detach(member);
+
             tx.commit();
         }catch(Exception e){
             tx.rollback();
